@@ -34,6 +34,7 @@ const Hero = () => {
             <Button 
               className="btn-primary rounded-full px-8 py-6 text-base font-medium gap-2 group"
               size="lg"
+              onClick={() => document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' })}
             >
               <Calendar className="w-5 h-5" />
               Book Appointment
@@ -43,6 +44,7 @@ const Hero = () => {
               variant="outline"
               className="btn-outline-gold rounded-full px-8 py-6 text-base font-medium"
               size="lg"
+              onClick={() => document.getElementById('order-tracking')?.scrollIntoView({ behavior: 'smooth' })}
             >
               Track Your Order
             </Button>
