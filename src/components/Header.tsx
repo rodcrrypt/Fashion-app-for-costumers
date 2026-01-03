@@ -21,7 +21,7 @@ const Header = () => {
           <a href="#" className="flex items-center gap-2">
             <Scissors className="w-6 h-6 text-primary" />
             <span className="font-display text-xl md:text-2xl font-semibold text-foreground">
-              Stitch & Style
+              Orekelewa
             </span>
           </a>
 
