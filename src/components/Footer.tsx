@@ -58,19 +58,19 @@ const Footer = () => {
             <ul className="space-y-3 font-body text-sm text-cream/70">
               <li className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-primary" />
-                +1 (555) 123-4567
+                07038315942
               </li>
               <li className="flex items-center gap-3">
                 <MessageCircle className="w-4 h-4 text-primary" />
-                WhatsApp Available
+                WhatsApp: 07038315942
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-4 h-4 text-primary" />
-                hello@stitchandstyle.com
+                dressbyorekelewa@gmail.com
               </li>
               <li className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 text-primary mt-1" />
-                Home-based studio<br />By appointment only
+                Peter Odili Road,<br />Port-Harcourt, Rivers, Nigeria
               </li>
             </ul>
           </div>
