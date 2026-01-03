@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { Menu, X, Scissors } from 'lucide-react';
+import { Menu, X, Scissors, LogIn, LogOut, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/hooks/useAuth';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, isAdmin, signOut } = useAuth();
 
   const navLinks = [
     { href: '#services', label: 'Services' },
@@ -38,10 +40,32 @@ const Header = () => {
             ))}
           </nav>
 
-          {/* CTA Button - Desktop */}
-          <Button className="hidden md:inline-flex btn-primary rounded-full px-6">
-            Book Now
-          </Button>
+          {/* Auth Buttons - Desktop */}
+          <div className="hidden md:flex items-center gap-3">
+            {user ? (
+              <>
+                <span className="text-sm text-muted-foreground flex items-center gap-1">
+                  <User className="w-4 h-4" />
+                  {isAdmin && <span className="text-primary font-medium">(Owner)</span>}
+                </span>
+                <Button 
+                  variant="outline" 
+                  className="rounded-full px-4"
+                  onClick={() => signOut()}
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Sign Out
+                </Button>
+              </>
+            ) : (
+              <a href="/auth">
+                <Button className="btn-primary rounded-full px-6">
+                  <LogIn className="w-4 h-4 mr-2" />
+                  Login
+                </Button>
+              </a>
+            )}
+          </div>
 
           {/* Mobile Menu Button */}
           <button
@@ -67,9 +91,29 @@ const Header = () => {
                   {link.label}
                 </a>
               ))}
-              <Button className="btn-primary rounded-full w-full mt-2">
-                Book Now
-              </Button>
+              {user ? (
+                <div className="flex flex-col gap-2 pt-2 border-t border-border">
+                  <span className="text-sm text-muted-foreground flex items-center gap-1">
+                    <User className="w-4 h-4" />
+                    {isAdmin && <span className="text-primary font-medium">(Owner)</span>}
+                  </span>
+                  <Button 
+                    variant="outline" 
+                    className="rounded-full w-full"
+                    onClick={() => signOut()}
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Sign Out
+                  </Button>
+                </div>
+              ) : (
+                <a href="/auth" onClick={() => setIsMenuOpen(false)}>
+                  <Button className="btn-primary rounded-full w-full mt-2">
+                    <LogIn className="w-4 h-4 mr-2" />
+                    Login
+                  </Button>
+                </a>
+              )}
             </div>
           </nav>
         )}
