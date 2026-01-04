@@ -24,8 +24,7 @@ const features = [
   },
 ];
 
-// Replace this with your actual Calendly URL
-const CALENDLY_URL = 'https://calendly.com/your-username';
+const CALENDLY_URL = 'https://calendly.com/dressbyorekelewa/consultation';
 
 const BookingSection = () => {
   return (
