@@ -10,7 +10,7 @@ const Footer = () => {
             <a href="#" className="flex items-center gap-2 mb-4">
               <Scissors className="w-6 h-6 text-primary" />
               <span className="font-display text-xl font-semibold">
-                Beauty
+                Beauty in it's entirety
               </span>
             </a>
             <p className="font-body text-sm text-cream/70 mb-6">
@@ -78,7 +78,7 @@ const Footer = () => {
 
         <div className="pt-8 border-t border-cream/20 text-center">
           <p className="font-body text-sm text-cream/50">
-            © 2026 Beauty. Crafted with love.
+            © 2026 Beauty in it's entirety. Crafted with love.
           </p>
         </div>
       </div>
