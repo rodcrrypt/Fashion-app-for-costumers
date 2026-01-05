@@ -1,4 +1,5 @@
-import { Scissors, Instagram, Facebook, MessageCircle, Mail, Phone, MapPin } from 'lucide-react';
+import { Instagram, Facebook, MessageCircle, Mail, Phone, MapPin } from 'lucide-react';
+import brandLogo from '@/assets/brand-logo.png';
 
 const Footer = () => {
   return (
@@ -8,10 +9,7 @@ const Footer = () => {
           {/* Brand */}
           <div>
             <a href="#" className="flex items-center gap-2 mb-4">
-              <Scissors className="w-6 h-6 text-primary" />
-              <span className="font-display text-xl font-semibold">
-                Beauty in it's entirety
-              </span>
+              <img src={brandLogo} alt="Beauty in it's entirety" className="h-12 w-auto" />
             </a>
             <p className="font-body text-sm text-cream/70 mb-6">
               Crafting elegance, one stitch at a time. 
