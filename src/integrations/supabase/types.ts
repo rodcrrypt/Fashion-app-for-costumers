@@ -14,6 +14,66 @@ export type Database = {
   }
   public: {
     Tables: {
+      measurements: {
+        Row: {
+          arm_length: number | null
+          bicep: number | null
+          chest: number | null
+          created_at: string
+          customer_id: string
+          height: number | null
+          hip: number | null
+          id: string
+          inseam: number | null
+          neck: number | null
+          notes: string | null
+          outseam: number | null
+          shoulder: number | null
+          thigh: number | null
+          updated_at: string
+          waist: number | null
+          wrist: number | null
+        }
+        Insert: {
+          arm_length?: number | null
+          bicep?: number | null
+          chest?: number | null
+          created_at?: string
+          customer_id: string
+          height?: number | null
+          hip?: number | null
+          id?: string
+          inseam?: number | null
+          neck?: number | null
+          notes?: string | null
+          outseam?: number | null
+          shoulder?: number | null
+          thigh?: number | null
+          updated_at?: string
+          waist?: number | null
+          wrist?: number | null
+        }
+        Update: {
+          arm_length?: number | null
+          bicep?: number | null
+          chest?: number | null
+          created_at?: string
+          customer_id?: string
+          height?: number | null
+          hip?: number | null
+          id?: string
+          inseam?: number | null
+          neck?: number | null
+          notes?: string | null
+          outseam?: number | null
+          shoulder?: number | null
+          thigh?: number | null
+          updated_at?: string
+          waist?: number | null
+          wrist?: number | null
+        }
+        Relationships: []
+      }
       order_updates: {
         Row: {
           created_at: string
