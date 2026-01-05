@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Menu, X, Scissors, LogIn, LogOut, User } from 'lucide-react';
+import { Menu, X, LogIn, LogOut, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
+import brandLogo from '@/assets/brand-logo.png';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -21,10 +22,7 @@ const Header = () => {
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <a href="#" className="flex items-center gap-2">
-            <Scissors className="w-6 h-6 text-primary" />
-            <span className="font-display text-xl md:text-2xl font-semibold text-foreground">
-              Beauty in it's entirety
-            </span>
+            <img src={brandLogo} alt="Beauty in it's entirety" className="h-10 md:h-12 w-auto" />
           </a>
 
           {/* Desktop Navigation */}
