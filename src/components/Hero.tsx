@@ -22,8 +22,7 @@ const Hero = () => {
             Bespoke Tailoring
           </span>
           <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-semibold text-foreground leading-tight mb-6 animate-slide-up">
-            Crafting Elegance,
-            <span className="block text-primary">One Stitch at a Time</span>
+            <span className="text-primary">Beauty in its Entirety</span>
           </h1>
           <p className="font-body text-lg text-muted-foreground mb-8 max-w-lg animate-slide-up" style={{ animationDelay: '0.1s' }}>
             Experience personalized tailoring from the comfort of your home. 
