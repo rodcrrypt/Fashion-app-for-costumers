@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useOrders, useOrderUpdates, Order, OrderStatus } from '@/hooks/useOrders';
 import { useAuth } from '@/hooks/useAuth';
@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Plus, Edit2, MessageSquare, Users, Package, Clock } from 'lucide-react';
+import { Plus, Edit2, MessageSquare, Users, Package, Clock, Upload, X, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 
@@ -58,8 +58,11 @@ const AdminOrderManagement = () => {
   const [statusUpdate, setStatusUpdate] = useState({
     status: '' as OrderStatus,
     note: '',
-    photo_url: '',
   });
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchCustomers = async () => {
     const { data } = await supabase.from('profiles').select('id, full_name, email');
@@ -87,16 +90,63 @@ const AdminOrderManagement = () => {
     }
   };
 
+  const handlePhotoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error('File size must be less than 5MB');
+        return;
+      }
+      setPhotoFile(file);
+      setPhotoPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const clearPhoto = () => {
+    setPhotoFile(null);
+    setPhotoPreview(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const uploadPhoto = async (): Promise<string | null> => {
+    if (!photoFile || !selectedOrder) return null;
+
+    const fileExt = photoFile.name.split('.').pop();
+    const fileName = `${selectedOrder.id}/${Date.now()}.${fileExt}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from('progress-photos')
+      .upload(fileName, photoFile);
+
+    if (uploadError) throw uploadError;
+
+    const { data } = supabase.storage
+      .from('progress-photos')
+      .getPublicUrl(fileName);
+
+    return data.publicUrl;
+  };
+
   const handleAddUpdate = async () => {
     if (!selectedOrder) return;
 
     try {
+      setUploading(true);
+
+      // Upload photo if selected
+      let photoUrl: string | null = null;
+      if (photoFile) {
+        photoUrl = await uploadPhoto();
+      }
+
       // Add the update
       const { error: updateError } = await supabase.from('order_updates').insert({
         order_id: selectedOrder.id,
         status: statusUpdate.status,
         note: statusUpdate.note || null,
-        photo_url: statusUpdate.photo_url || null,
+        photo_url: photoUrl,
       });
 
       if (updateError) throw updateError;
@@ -111,7 +161,8 @@ const AdminOrderManagement = () => {
 
       toast.success('Status updated successfully');
       setShowUpdateDialog(false);
-      setStatusUpdate({ status: '' as OrderStatus, note: '', photo_url: '' });
+      setStatusUpdate({ status: '' as OrderStatus, note: '' });
+      clearPhoto();
       refetch();
       refetchUpdates();
       
@@ -119,6 +170,8 @@ const AdminOrderManagement = () => {
       setSelectedOrder({ ...selectedOrder, status: statusUpdate.status });
     } catch (err: any) {
       toast.error(err.message || 'Failed to update status');
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -325,15 +378,54 @@ const AdminOrderManagement = () => {
                             />
                           </div>
                           <div>
-                            <label className="text-sm font-medium mb-1 block">Photo URL (optional)</label>
-                            <Input
-                              value={statusUpdate.photo_url}
-                              onChange={(e) => setStatusUpdate({ ...statusUpdate, photo_url: e.target.value })}
-                              placeholder="https://..."
+                            <label className="text-sm font-medium mb-1 block">Progress Photo (optional)</label>
+                            <input
+                              type="file"
+                              ref={fileInputRef}
+                              accept="image/*"
+                              onChange={handlePhotoSelect}
+                              className="hidden"
                             />
+                            {photoPreview ? (
+                              <div className="relative">
+                                <img 
+                                  src={photoPreview} 
+                                  alt="Preview" 
+                                  className="w-full h-32 object-cover rounded-lg"
+                                />
+                                <button
+                                  type="button"
+                                  onClick={clearPhoto}
+                                  className="absolute top-2 right-2 p-1 bg-destructive text-destructive-foreground rounded-full"
+                                >
+                                  <X className="w-4 h-4" />
+                                </button>
+                              </div>
+                            ) : (
+                              <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => fileInputRef.current?.click()}
+                                className="w-full gap-2"
+                              >
+                                <Upload className="w-4 h-4" />
+                                Upload Photo
+                              </Button>
+                            )}
                           </div>
-                          <Button onClick={handleAddUpdate} className="w-full btn-primary" disabled={!statusUpdate.status}>
-                            Save Update
+                          <Button 
+                            onClick={handleAddUpdate} 
+                            className="w-full btn-primary" 
+                            disabled={!statusUpdate.status || uploading}
+                          >
+                            {uploading ? (
+                              <>
+                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                Uploading...
+                              </>
+                            ) : (
+                              'Save Update'
+                            )}
                           </Button>
                         </div>
                       </DialogContent>
