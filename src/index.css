@@ -122,11 +122,19 @@
   }
 
   .card-elegant {
-    @apply bg-card rounded-lg shadow-md hover:shadow-xl transition-all duration-300 border border-border;
+    @apply bg-card rounded-xl shadow-md hover:shadow-xl transition-all duration-300 border border-border;
+  }
+
+  .card-glass {
+    @apply bg-card/80 backdrop-blur-md rounded-xl shadow-lg border border-border/50;
   }
 
   .text-gradient-gold {
     @apply bg-gradient-to-r from-accent via-gold-light to-accent bg-clip-text text-transparent;
+  }
+
+  .text-gradient-rose {
+    @apply bg-gradient-to-r from-primary via-rose-light to-primary bg-clip-text text-transparent;
   }
 
   .section-padding {
@@ -135,6 +143,26 @@
 
   .container-narrow {
     @apply max-w-6xl mx-auto;
+  }
+
+  /* Professional focus states for accessibility */
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background;
+  }
+
+  /* Skip link for accessibility */
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-lg;
+  }
+
+  /* Hover lift effect */
+  .hover-lift {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-xl;
+  }
+
+  /* Gradient border effect */
+  .gradient-border {
+    @apply relative before:absolute before:inset-0 before:rounded-xl before:p-[2px] before:bg-gradient-to-r before:from-primary before:via-accent before:to-primary before:-z-10;
   }
 }
 
@@ -155,6 +183,18 @@
     animation: slideUp 0.6s ease-out forwards;
   }
 
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-pulse-soft {
+    animation: pulseSoft 2s ease-in-out infinite;
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s linear infinite;
+  }
+
   @keyframes fadeIn {
     from {
       opacity: 0;
@@ -172,6 +212,48 @@
     to {
       opacity: 1;
       transform: translateY(0);
+    }
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes pulseSoft {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  /* Reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-fade-in,
+    .animate-slide-up,
+    .animate-float,
+    .animate-pulse-soft,
+    .animate-shimmer {
+      animation: none;
+    }
+    
+    .hover-lift {
+      transform: none;
     }
   }
 }
