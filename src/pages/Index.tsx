@@ -8,6 +8,7 @@ import AdminMeasurements from '@/components/AdminMeasurements';
 import CustomerMeasurements from '@/components/CustomerMeasurements';
 import SetupGuide from '@/components/SetupGuide';
 import Footer from '@/components/Footer';
+import CustomerSupportButton from '@/components/CustomerSupportButton';
 import { useAuth } from '@/hooks/useAuth';
 
 const Index = () => {
@@ -33,6 +34,7 @@ const Index = () => {
         <SetupGuide />
       </main>
       <Footer />
+      <CustomerSupportButton />
     </div>
   );
 };
