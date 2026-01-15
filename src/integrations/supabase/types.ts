@@ -14,6 +14,57 @@ export type Database = {
   }
   public: {
     Tables: {
+      bookings: {
+        Row: {
+          admin_reply: string | null
+          booking_date: string
+          booking_time: string
+          created_at: string
+          customer_email: string
+          customer_id: string | null
+          customer_name: string
+          customer_phone: string | null
+          id: string
+          notes: string | null
+          replied_at: string | null
+          service_type: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          admin_reply?: string | null
+          booking_date: string
+          booking_time: string
+          created_at?: string
+          customer_email: string
+          customer_id?: string | null
+          customer_name: string
+          customer_phone?: string | null
+          id?: string
+          notes?: string | null
+          replied_at?: string | null
+          service_type: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          admin_reply?: string | null
+          booking_date?: string
+          booking_time?: string
+          created_at?: string
+          customer_email?: string
+          customer_id?: string | null
+          customer_name?: string
+          customer_phone?: string | null
+          id?: string
+          notes?: string | null
+          replied_at?: string | null
+          service_type?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       measurements: {
         Row: {
           arm_length: number | null

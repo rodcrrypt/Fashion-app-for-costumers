@@ -8,7 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { format, addDays, isBefore, startOfToday } from 'date-fns';
-
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
 const features = [
   {
     icon: Clock,
@@ -89,21 +90,48 @@ const BookingSection = () => {
 
     setIsSubmitting(true);
     
-    // Simulate booking submission
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    toast({
-      title: "Booking Confirmed! 🎉",
-      description: `Your ${serviceTypes.find(s => s.value === serviceType)?.label} is scheduled for ${format(selectedDate, 'MMMM d, yyyy')} at ${selectedTime}. We'll send you a confirmation via WhatsApp.`,
-    });
+    try {
+      // Get current user if logged in
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      // Save booking to database
+      const { error } = await supabase
+        .from('bookings')
+        .insert({
+          customer_id: user?.id || null,
+          customer_name: formData.name,
+          customer_email: formData.email || '',
+          customer_phone: formData.phone,
+          service_type: serviceType,
+          booking_date: format(selectedDate, 'yyyy-MM-dd'),
+          booking_time: selectedTime,
+          notes: formData.notes || null,
+          status: 'pending',
+        });
 
-    // Reset form
-    setSelectedDate(undefined);
-    setSelectedTime('');
-    setServiceType('');
-    setFormData({ name: '', email: '', phone: '', notes: '' });
-    setBookingStep('date');
-    setIsSubmitting(false);
+      if (error) throw error;
+      
+      toast({
+        title: "Booking Confirmed! 🎉",
+        description: `Your ${serviceTypes.find(s => s.value === serviceType)?.label} is scheduled for ${format(selectedDate, 'MMMM d, yyyy')} at ${selectedTime}. We'll send you a confirmation via WhatsApp.`,
+      });
+
+      // Reset form
+      setSelectedDate(undefined);
+      setSelectedTime('');
+      setServiceType('');
+      setFormData({ name: '', email: '', phone: '', notes: '' });
+      setBookingStep('date');
+    } catch (error) {
+      console.error('Booking error:', error);
+      toast({
+        title: "Booking Failed",
+        description: "Something went wrong. Please try again or contact us directly.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const canProceedToDetails = selectedDate && selectedTime && serviceType;
