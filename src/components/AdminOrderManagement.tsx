@@ -254,7 +254,7 @@ const AdminOrderManagement = () => {
                     />
                   </div>
                   <div>
-                    <label className="text-sm font-medium mb-1 block">Total Amount (₦)</label>
+                    <label className="text-sm font-medium mb-1 block">Total Amount ($)</label>
                     <Input
                       type="number"
                       value={newOrder.total_amount}
@@ -436,7 +436,7 @@ const AdminOrderManagement = () => {
                     {selectedOrder.estimated_completion && (
                       <p>Est. completion: {format(new Date(selectedOrder.estimated_completion), 'MMM d, yyyy')}</p>
                     )}
-                    {selectedOrder.total_amount && <p>Total: ₦{selectedOrder.total_amount.toLocaleString()}</p>}
+                    {selectedOrder.total_amount && <p>Total: ${selectedOrder.total_amount.toLocaleString()}</p>}
                   </div>
 
                   <div>
