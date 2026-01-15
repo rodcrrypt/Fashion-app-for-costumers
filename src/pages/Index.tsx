@@ -4,6 +4,7 @@ import Services from '@/components/Services';
 import BookingSection from '@/components/BookingSection';
 import OrderTracking from '@/components/OrderTracking';
 import AdminOrderManagement from '@/components/AdminOrderManagement';
+import AdminBookings from '@/components/AdminBookings';
 import AdminMeasurements from '@/components/AdminMeasurements';
 import CustomerMeasurements from '@/components/CustomerMeasurements';
 import SetupGuide from '@/components/SetupGuide';
@@ -21,6 +22,7 @@ const Index = () => {
         <Hero />
         <Services />
         <BookingSection />
+        {isAdmin && <AdminBookings />}
         {isAdmin && (
           <section id="admin-measurements" className="section-padding bg-muted/30">
             <div className="container-narrow mx-auto">
