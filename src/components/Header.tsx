@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Menu, X, LogIn, LogOut, User, ChevronDown } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Menu, X, LogIn, LogOut, User, ChevronDown, LayoutDashboard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import brandLogo from '@/assets/brand-logo.png';
@@ -8,6 +9,8 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { user, isAdmin, signOut } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   // Handle scroll effect
   useEffect(() => {
@@ -25,15 +28,17 @@ const Header = () => {
     { href: '#contact', label: 'Contact' },
   ];
 
-  const adminLinks = [
-    { href: '#admin-bookings', label: 'Bookings' },
-    { href: '#admin-measurements', label: 'Measurements' },
-    { href: '#admin-orders', label: 'Orders' },
-  ];
-
   const scrollToSection = (href: string) => {
-    const id = href.replace('#', '');
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    if (location.pathname !== '/') {
+      navigate('/');
+      setTimeout(() => {
+        const id = href.replace('#', '');
+        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    } else {
+      const id = href.replace('#', '');
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    }
     setIsMenuOpen(false);
   };
 
@@ -87,15 +92,17 @@ const Header = () => {
               {isAdmin && (
                 <>
                   <span className="w-px h-6 bg-border/50 mx-2" aria-hidden="true" />
-                  {adminLinks.map((link) => (
-                    <button
-                      key={link.href}
-                      onClick={() => scrollToSection(link.href)}
-                      className="font-body text-sm text-primary font-medium px-4 py-2 rounded-lg transition-all duration-300 hover:bg-primary/10 focus-ring"
-                    >
-                      {link.label}
-                    </button>
-                  ))}
+                  <button
+                    onClick={() => navigate('/admin')}
+                    className={`font-body text-sm font-medium px-4 py-2 rounded-lg transition-all duration-300 focus-ring flex items-center gap-2 ${
+                      location.pathname === '/admin' 
+                        ? 'bg-primary text-primary-foreground' 
+                        : 'text-primary hover:bg-primary/10'
+                    }`}
+                  >
+                    <LayoutDashboard className="w-4 h-4" />
+                    Admin Dashboard
+                  </button>
                 </>
               )}
             </nav>
@@ -173,16 +180,21 @@ const Header = () => {
                   <div className="pt-2 mt-2 border-t border-border/50">
                     <span className="text-xs text-muted-foreground px-4 uppercase tracking-wider">Admin</span>
                   </div>
-                  {adminLinks.map((link) => (
-                    <button
-                      key={link.href}
-                      onClick={() => scrollToSection(link.href)}
-                      className="font-body text-base text-primary font-medium transition-colors duration-300 py-3 px-4 rounded-lg hover:bg-primary/10 text-left focus-ring"
-                      tabIndex={isMenuOpen ? 0 : -1}
-                    >
-                      {link.label}
-                    </button>
-                  ))}
+                  <button
+                    onClick={() => {
+                      navigate('/admin');
+                      setIsMenuOpen(false);
+                    }}
+                    className={`font-body text-base font-medium transition-colors duration-300 py-3 px-4 rounded-lg text-left focus-ring flex items-center gap-2 ${
+                      location.pathname === '/admin' 
+                        ? 'bg-primary text-primary-foreground' 
+                        : 'text-primary hover:bg-primary/10'
+                    }`}
+                    tabIndex={isMenuOpen ? 0 : -1}
+                  >
+                    <LayoutDashboard className="w-4 h-4" />
+                    Admin Dashboard
+                  </button>
                 </>
               )}
               
