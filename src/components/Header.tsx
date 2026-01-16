@@ -25,6 +25,12 @@ const Header = () => {
     { href: '#contact', label: 'Contact' },
   ];
 
+  const adminLinks = [
+    { href: '#admin-bookings', label: 'Bookings' },
+    { href: '#admin-measurements', label: 'Measurements' },
+    { href: '#admin-orders', label: 'Orders' },
+  ];
+
   const scrollToSection = (href: string) => {
     const id = href.replace('#', '');
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
@@ -78,6 +84,20 @@ const Header = () => {
                   {link.label}
                 </button>
               ))}
+              {isAdmin && (
+                <>
+                  <span className="w-px h-6 bg-border/50 mx-2" aria-hidden="true" />
+                  {adminLinks.map((link) => (
+                    <button
+                      key={link.href}
+                      onClick={() => scrollToSection(link.href)}
+                      className="font-body text-sm text-primary font-medium px-4 py-2 rounded-lg transition-all duration-300 hover:bg-primary/10 focus-ring"
+                    >
+                      {link.label}
+                    </button>
+                  ))}
+                </>
+              )}
             </nav>
 
             {/* Auth Buttons - Desktop */}
@@ -148,6 +168,23 @@ const Header = () => {
                   {link.label}
                 </button>
               ))}
+              {isAdmin && (
+                <>
+                  <div className="pt-2 mt-2 border-t border-border/50">
+                    <span className="text-xs text-muted-foreground px-4 uppercase tracking-wider">Admin</span>
+                  </div>
+                  {adminLinks.map((link) => (
+                    <button
+                      key={link.href}
+                      onClick={() => scrollToSection(link.href)}
+                      className="font-body text-base text-primary font-medium transition-colors duration-300 py-3 px-4 rounded-lg hover:bg-primary/10 text-left focus-ring"
+                      tabIndex={isMenuOpen ? 0 : -1}
+                    >
+                      {link.label}
+                    </button>
+                  ))}
+                </>
+              )}
               
               <div className="pt-4 mt-2 border-t border-border/50">
                 {user ? (
