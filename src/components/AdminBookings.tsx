@@ -9,9 +9,16 @@ import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Calendar, Clock, User, Mail, Phone, MessageSquare, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+import { Calendar, Clock, User, Mail, Phone, MessageSquare, CheckCircle, XCircle, AlertCircle, Send } from 'lucide-react';
 import { format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
+
+const quickTemplates = [
+  { label: 'Confirm Appointment', text: 'Your appointment has been confirmed. We look forward to seeing you!' },
+  { label: 'Request Reschedule', text: 'We need to reschedule your appointment. Please contact us to arrange a new time.' },
+  { label: 'Reminder', text: 'This is a reminder for your upcoming appointment. Please arrive 10 minutes early.' },
+  { label: 'Thank You', text: 'Thank you for visiting us. We hope you were satisfied with our service!' },
+];
 
 interface Booking {
   id: string;
@@ -158,6 +165,7 @@ const AdminBookings = () => {
                       <TableHead>Service</TableHead>
                       <TableHead>Date & Time</TableHead>
                       <TableHead>Status</TableHead>
+                      <TableHead>Contact</TableHead>
                       <TableHead>Actions</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -214,6 +222,28 @@ const AdminBookings = () => {
                               Replied
                             </div>
                           )}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            {booking.customer_phone && (
+                              <a
+                                href={`https://wa.me/${booking.customer_phone.replace(/\D/g, '')}?text=${encodeURIComponent(`Hi ${booking.customer_name}, regarding your ${booking.service_type.replace('-', ' ')} booking on ${format(new Date(booking.booking_date), 'MMM dd, yyyy')} at ${booking.booking_time}...`)}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center justify-center h-8 w-8 rounded-md bg-green-500/10 text-green-600 hover:bg-green-500/20 transition-colors"
+                                title="WhatsApp"
+                              >
+                                <Phone className="h-4 w-4" />
+                              </a>
+                            )}
+                            <a
+                              href={`mailto:${booking.customer_email}?subject=${encodeURIComponent(`Regarding your ${booking.service_type.replace('-', ' ')} booking`)}&body=${encodeURIComponent(`Hi ${booking.customer_name},\n\nRegarding your booking on ${format(new Date(booking.booking_date), 'MMM dd, yyyy')} at ${booking.booking_time}...\n\nBest regards,\nDress by Orekelewa`)}`}
+                              className="inline-flex items-center justify-center h-8 w-8 rounded-md bg-blue-500/10 text-blue-600 hover:bg-blue-500/20 transition-colors"
+                              title="Email"
+                            >
+                              <Mail className="h-4 w-4" />
+                            </a>
+                          </div>
                         </TableCell>
                         <TableCell>
                           <Button 
@@ -286,6 +316,24 @@ const AdminBookings = () => {
                 </div>
 
                 <div className="space-y-2">
+                  <label className="text-sm font-medium">Quick Templates</label>
+                  <div className="flex flex-wrap gap-2">
+                    {quickTemplates.map((template) => (
+                      <Button
+                        key={template.label}
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="text-xs"
+                        onClick={() => setReplyText(template.text)}
+                      >
+                        {template.label}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
                   <label className="text-sm font-medium">Your Reply</label>
                   <Textarea
                     placeholder="Write your response to the customer..."
@@ -293,6 +341,32 @@ const AdminBookings = () => {
                     onChange={(e) => setReplyText(e.target.value)}
                     rows={4}
                   />
+                </div>
+
+                {/* Direct contact buttons in dialog */}
+                <div className="flex gap-2 pt-2 border-t">
+                  {selectedBooking?.customer_phone && (
+                    <a
+                      href={`https://wa.me/${selectedBooking.customer_phone.replace(/\D/g, '')}?text=${encodeURIComponent(replyText || `Hi ${selectedBooking.customer_name}, regarding your booking...`)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1"
+                    >
+                      <Button type="button" variant="outline" className="w-full gap-2 bg-green-500/10 text-green-700 hover:bg-green-500/20 border-green-500/30">
+                        <Phone className="h-4 w-4" />
+                        Send via WhatsApp
+                      </Button>
+                    </a>
+                  )}
+                  <a
+                    href={`mailto:${selectedBooking?.customer_email}?subject=${encodeURIComponent(`Regarding your ${selectedBooking?.service_type.replace('-', ' ')} booking`)}&body=${encodeURIComponent(replyText || `Hi ${selectedBooking?.customer_name},\n\nRegarding your booking...\n\nBest regards,\nDress by Orekelewa`)}`}
+                    className="flex-1"
+                  >
+                    <Button type="button" variant="outline" className="w-full gap-2 bg-blue-500/10 text-blue-700 hover:bg-blue-500/20 border-blue-500/30">
+                      <Mail className="h-4 w-4" />
+                      Send via Email
+                    </Button>
+                  </a>
                 </div>
               </div>
             )}
