@@ -65,6 +65,47 @@ export type Database = {
         }
         Relationships: []
       }
+      customer_notes: {
+        Row: {
+          admin_id: string
+          created_at: string
+          customer_email: string
+          customer_id: string | null
+          id: string
+          note: string
+          note_type: string
+          updated_at: string
+        }
+        Insert: {
+          admin_id: string
+          created_at?: string
+          customer_email: string
+          customer_id?: string | null
+          id?: string
+          note: string
+          note_type?: string
+          updated_at?: string
+        }
+        Update: {
+          admin_id?: string
+          created_at?: string
+          customer_email?: string
+          customer_id?: string | null
+          id?: string
+          note?: string
+          note_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customer_notes_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       measurements: {
         Row: {
           arm_length: number | null

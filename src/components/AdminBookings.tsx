@@ -9,9 +9,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Calendar, Clock, User, Mail, Phone, MessageSquare, CheckCircle, XCircle, AlertCircle, Send } from 'lucide-react';
+import { Calendar, Clock, User, Mail, Phone, MessageSquare, CheckCircle, XCircle, AlertCircle, Send, History } from 'lucide-react';
 import { format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
+import CustomerNotesDialog from './CustomerNotesDialog';
 
 const quickTemplates = [
   { label: 'Confirm Appointment', text: 'Your appointment has been confirmed. We look forward to seeing you!' },
@@ -50,6 +51,17 @@ const AdminBookings = () => {
   const [replyDialogOpen, setReplyDialogOpen] = useState(false);
   const [replyText, setReplyText] = useState('');
   const [newStatus, setNewStatus] = useState('');
+  const [notesDialogOpen, setNotesDialogOpen] = useState(false);
+  const [selectedCustomerForNotes, setSelectedCustomerForNotes] = useState<{ email: string; name: string; id?: string | null } | null>(null);
+
+  const handleOpenNotes = (booking: Booking) => {
+    setSelectedCustomerForNotes({
+      email: booking.customer_email,
+      name: booking.customer_name,
+      id: null, // bookings may not have customer_id linked
+    });
+    setNotesDialogOpen(true);
+  };
 
   const { data: bookings = [], isLoading } = useQuery({
     queryKey: ['admin-bookings'],
@@ -246,15 +258,26 @@ const AdminBookings = () => {
                           </div>
                         </TableCell>
                         <TableCell>
-                          <Button 
-                            size="sm" 
-                            variant="outline"
-                            onClick={() => handleReply(booking)}
-                            className="gap-1.5"
-                          >
-                            <MessageSquare className="h-3.5 w-3.5" />
-                            {booking.admin_reply ? 'Edit Reply' : 'Reply'}
-                          </Button>
+                          <div className="flex items-center gap-2">
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              onClick={() => handleReply(booking)}
+                              className="gap-1.5"
+                            >
+                              <MessageSquare className="h-3.5 w-3.5" />
+                              {booking.admin_reply ? 'Edit Reply' : 'Reply'}
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => handleOpenNotes(booking)}
+                              className="gap-1.5"
+                              title="Customer History"
+                            >
+                              <History className="h-3.5 w-3.5" />
+                            </Button>
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -381,6 +404,17 @@ const AdminBookings = () => {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+
+        {/* Customer Notes Dialog */}
+        {selectedCustomerForNotes && (
+          <CustomerNotesDialog
+            open={notesDialogOpen}
+            onOpenChange={setNotesDialogOpen}
+            customerEmail={selectedCustomerForNotes.email}
+            customerName={selectedCustomerForNotes.name}
+            customerId={selectedCustomerForNotes.id}
+          />
+        )}
       </div>
     </section>
   );
