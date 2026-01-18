@@ -6,18 +6,29 @@ import { useAuth } from '@/hooks/useAuth';
 
 interface Measurements {
   id: string;
-  chest: number | null;
   shoulder: number | null;
-  arm_length: number | null;
-  bicep: number | null;
-  wrist: number | null;
-  neck: number | null;
-  waist: number | null;
-  hip: number | null;
-  inseam: number | null;
-  outseam: number | null;
+  bust: number | null;
+  upbust: number | null;
+  underbust: number | null;
+  shoulder_to_nipple: number | null;
+  shoulder_to_underbust: number | null;
+  shoulder_to_above_knee: number | null;
+  shoulder_to_knee: number | null;
+  half_length_front: number | null;
+  half_length_back: number | null;
+  blouse_length: number | null;
+  hips: number | null;
+  short_length: number | null;
+  midi_length: number | null;
+  full_length: number | null;
   thigh: number | null;
-  height: number | null;
+  knee: number | null;
+  ankle: number | null;
+  trouser_length: number | null;
+  armhole: number | null;
+  round_sleeves: number | null;
+  sleeve_length: number | null;
+  neck: number | null;
   notes: string | null;
   updated_at: string;
 }
@@ -115,7 +126,7 @@ const CustomerMeasurements = () => {
             </CardContent>
           </Card>
         ) : (
-          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
             <Card>
               <CardHeader>
                 <CardTitle className="font-display text-lg flex items-center gap-2">
@@ -123,16 +134,53 @@ const CustomerMeasurements = () => {
                   Upper Body
                 </CardTitle>
                 <CardDescription className="font-body">
-                  Measurements for tops and shirts
+                  Bust and shoulder measurements
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <MeasurementItem label="Chest" value={measurements.chest} />
                 <MeasurementItem label="Shoulder" value={measurements.shoulder} />
-                <MeasurementItem label="Arm Length" value={measurements.arm_length} />
-                <MeasurementItem label="Bicep" value={measurements.bicep} />
-                <MeasurementItem label="Wrist" value={measurements.wrist} />
+                <MeasurementItem label="Bust" value={measurements.bust} />
+                <MeasurementItem label="Upbust" value={measurements.upbust} />
+                <MeasurementItem label="Underbust" value={measurements.underbust} />
                 <MeasurementItem label="Neck" value={measurements.neck} />
+                <MeasurementItem label="Armhole" value={measurements.armhole} />
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="font-display text-lg flex items-center gap-2">
+                  <Ruler className="w-5 h-5 text-primary" />
+                  Lengths
+                </CardTitle>
+                <CardDescription className="font-body">
+                  Body length measurements
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <MeasurementItem label="Shoulder to Nipple" value={measurements.shoulder_to_nipple} />
+                <MeasurementItem label="Shoulder to Underbust" value={measurements.shoulder_to_underbust} />
+                <MeasurementItem label="Shoulder to Above Knee" value={measurements.shoulder_to_above_knee} />
+                <MeasurementItem label="Shoulder to Knee" value={measurements.shoulder_to_knee} />
+                <MeasurementItem label="Half Length (Front)" value={measurements.half_length_front} />
+                <MeasurementItem label="Half Length (Back)" value={measurements.half_length_back} />
+                <MeasurementItem label="Blouse Length" value={measurements.blouse_length} />
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="font-display text-lg flex items-center gap-2">
+                  <Ruler className="w-5 h-5 text-primary" />
+                  Sleeves
+                </CardTitle>
+                <CardDescription className="font-body">
+                  Arm and sleeve measurements
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <MeasurementItem label="Round Sleeves" value={measurements.round_sleeves} />
+                <MeasurementItem label="Sleeve Length" value={measurements.sleeve_length} />
               </CardContent>
             </Card>
 
@@ -143,21 +191,37 @@ const CustomerMeasurements = () => {
                   Lower Body
                 </CardTitle>
                 <CardDescription className="font-body">
-                  Measurements for pants and skirts
+                  Hip and leg measurements
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <MeasurementItem label="Waist" value={measurements.waist} />
-                <MeasurementItem label="Hip" value={measurements.hip} />
-                <MeasurementItem label="Inseam" value={measurements.inseam} />
-                <MeasurementItem label="Outseam" value={measurements.outseam} />
-                <MeasurementItem label="Thigh" value={measurements.thigh} />
-                <MeasurementItem label="Height" value={measurements.height} />
+                <MeasurementItem label="Hips" value={measurements.hips} />
+                <MeasurementItem label="Thighs" value={measurements.thigh} />
+                <MeasurementItem label="Knee" value={measurements.knee} />
+                <MeasurementItem label="Ankle" value={measurements.ankle} />
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="font-display text-lg flex items-center gap-2">
+                  <Ruler className="w-5 h-5 text-primary" />
+                  Garment Lengths
+                </CardTitle>
+                <CardDescription className="font-body">
+                  Dress and trouser lengths
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <MeasurementItem label="Short Length" value={measurements.short_length} />
+                <MeasurementItem label="Midi Length" value={measurements.midi_length} />
+                <MeasurementItem label="Full Length" value={measurements.full_length} />
+                <MeasurementItem label="Trouser Length" value={measurements.trouser_length} />
               </CardContent>
             </Card>
 
             {measurements.notes && (
-              <Card className="md:col-span-2">
+              <Card>
                 <CardHeader>
                   <CardTitle className="font-display text-lg">Notes</CardTitle>
                 </CardHeader>
@@ -167,7 +231,7 @@ const CustomerMeasurements = () => {
               </Card>
             )}
 
-            <p className="md:col-span-2 text-center font-body text-sm text-muted-foreground">
+            <p className="md:col-span-2 lg:col-span-3 text-center font-body text-sm text-muted-foreground">
               Last updated: {new Date(measurements.updated_at).toLocaleDateString()}
             </p>
           </div>
