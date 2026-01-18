@@ -108,61 +108,94 @@ export type Database = {
       }
       measurements: {
         Row: {
-          arm_length: number | null
-          bicep: number | null
-          chest: number | null
+          ankle: number | null
+          armhole: number | null
+          blouse_length: number | null
+          bust: number | null
           created_at: string
           customer_id: string
-          height: number | null
-          hip: number | null
+          full_length: number | null
+          half_length_back: number | null
+          half_length_front: number | null
+          hips: number | null
           id: string
-          inseam: number | null
+          knee: number | null
+          midi_length: number | null
           neck: number | null
           notes: string | null
-          outseam: number | null
+          round_sleeves: number | null
+          short_length: number | null
           shoulder: number | null
+          shoulder_to_above_knee: number | null
+          shoulder_to_knee: number | null
+          shoulder_to_nipple: number | null
+          shoulder_to_underbust: number | null
+          sleeve_length: number | null
           thigh: number | null
+          trouser_length: number | null
+          underbust: number | null
+          upbust: number | null
           updated_at: string
-          waist: number | null
-          wrist: number | null
         }
         Insert: {
-          arm_length?: number | null
-          bicep?: number | null
-          chest?: number | null
+          ankle?: number | null
+          armhole?: number | null
+          blouse_length?: number | null
+          bust?: number | null
           created_at?: string
           customer_id: string
-          height?: number | null
-          hip?: number | null
+          full_length?: number | null
+          half_length_back?: number | null
+          half_length_front?: number | null
+          hips?: number | null
           id?: string
-          inseam?: number | null
+          knee?: number | null
+          midi_length?: number | null
           neck?: number | null
           notes?: string | null
-          outseam?: number | null
+          round_sleeves?: number | null
+          short_length?: number | null
           shoulder?: number | null
+          shoulder_to_above_knee?: number | null
+          shoulder_to_knee?: number | null
+          shoulder_to_nipple?: number | null
+          shoulder_to_underbust?: number | null
+          sleeve_length?: number | null
           thigh?: number | null
+          trouser_length?: number | null
+          underbust?: number | null
+          upbust?: number | null
           updated_at?: string
-          waist?: number | null
-          wrist?: number | null
         }
         Update: {
-          arm_length?: number | null
-          bicep?: number | null
-          chest?: number | null
+          ankle?: number | null
+          armhole?: number | null
+          blouse_length?: number | null
+          bust?: number | null
           created_at?: string
           customer_id?: string
-          height?: number | null
-          hip?: number | null
+          full_length?: number | null
+          half_length_back?: number | null
+          half_length_front?: number | null
+          hips?: number | null
           id?: string
-          inseam?: number | null
+          knee?: number | null
+          midi_length?: number | null
           neck?: number | null
           notes?: string | null
-          outseam?: number | null
+          round_sleeves?: number | null
+          short_length?: number | null
           shoulder?: number | null
+          shoulder_to_above_knee?: number | null
+          shoulder_to_knee?: number | null
+          shoulder_to_nipple?: number | null
+          shoulder_to_underbust?: number | null
+          sleeve_length?: number | null
           thigh?: number | null
+          trouser_length?: number | null
+          underbust?: number | null
+          upbust?: number | null
           updated_at?: string
-          waist?: number | null
-          wrist?: number | null
         }
         Relationships: []
       }

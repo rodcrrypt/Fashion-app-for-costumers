@@ -19,18 +19,29 @@ interface Profile {
 interface Measurements {
   id: string;
   customer_id: string;
-  chest: number | null;
   shoulder: number | null;
-  arm_length: number | null;
-  bicep: number | null;
-  wrist: number | null;
-  neck: number | null;
-  waist: number | null;
-  hip: number | null;
-  inseam: number | null;
-  outseam: number | null;
+  bust: number | null;
+  upbust: number | null;
+  underbust: number | null;
+  shoulder_to_nipple: number | null;
+  shoulder_to_underbust: number | null;
+  shoulder_to_above_knee: number | null;
+  shoulder_to_knee: number | null;
+  half_length_front: number | null;
+  half_length_back: number | null;
+  blouse_length: number | null;
+  hips: number | null;
+  short_length: number | null;
+  midi_length: number | null;
+  full_length: number | null;
   thigh: number | null;
-  height: number | null;
+  knee: number | null;
+  ankle: number | null;
+  trouser_length: number | null;
+  armhole: number | null;
+  round_sleeves: number | null;
+  sleeve_length: number | null;
+  neck: number | null;
   notes: string | null;
   updated_at: string;
   profiles?: Profile;
@@ -38,37 +49,95 @@ interface Measurements {
 
 interface MeasurementFormData {
   customer_id: string;
-  chest: string;
   shoulder: string;
-  arm_length: string;
-  bicep: string;
-  wrist: string;
-  neck: string;
-  waist: string;
-  hip: string;
-  inseam: string;
-  outseam: string;
+  bust: string;
+  upbust: string;
+  underbust: string;
+  shoulder_to_nipple: string;
+  shoulder_to_underbust: string;
+  shoulder_to_above_knee: string;
+  shoulder_to_knee: string;
+  half_length_front: string;
+  half_length_back: string;
+  blouse_length: string;
+  hips: string;
+  short_length: string;
+  midi_length: string;
+  full_length: string;
   thigh: string;
-  height: string;
+  knee: string;
+  ankle: string;
+  trouser_length: string;
+  armhole: string;
+  round_sleeves: string;
+  sleeve_length: string;
+  neck: string;
   notes: string;
 }
 
 const initialFormData: MeasurementFormData = {
   customer_id: '',
-  chest: '',
   shoulder: '',
-  arm_length: '',
-  bicep: '',
-  wrist: '',
-  neck: '',
-  waist: '',
-  hip: '',
-  inseam: '',
-  outseam: '',
+  bust: '',
+  upbust: '',
+  underbust: '',
+  shoulder_to_nipple: '',
+  shoulder_to_underbust: '',
+  shoulder_to_above_knee: '',
+  shoulder_to_knee: '',
+  half_length_front: '',
+  half_length_back: '',
+  blouse_length: '',
+  hips: '',
+  short_length: '',
+  midi_length: '',
+  full_length: '',
   thigh: '',
-  height: '',
+  knee: '',
+  ankle: '',
+  trouser_length: '',
+  armhole: '',
+  round_sleeves: '',
+  sleeve_length: '',
+  neck: '',
   notes: '',
 };
+
+const measurementFields = [
+  { category: 'Upper Body', fields: [
+    { key: 'shoulder', label: 'Shoulder' },
+    { key: 'bust', label: 'Bust' },
+    { key: 'upbust', label: 'Upbust' },
+    { key: 'underbust', label: 'Underbust' },
+    { key: 'neck', label: 'Neck' },
+    { key: 'armhole', label: 'Armhole' },
+  ]},
+  { category: 'Lengths', fields: [
+    { key: 'shoulder_to_nipple', label: 'Shoulder to Nipple Point' },
+    { key: 'shoulder_to_underbust', label: 'Shoulder to Underbust' },
+    { key: 'shoulder_to_above_knee', label: 'Shoulder to Above Knee' },
+    { key: 'shoulder_to_knee', label: 'Shoulder to Knee' },
+    { key: 'half_length_front', label: 'Half Length (Front)' },
+    { key: 'half_length_back', label: 'Half Length (Back)' },
+    { key: 'blouse_length', label: 'Blouse Length' },
+  ]},
+  { category: 'Sleeves', fields: [
+    { key: 'round_sleeves', label: 'Round Sleeves' },
+    { key: 'sleeve_length', label: 'Sleeve Length' },
+  ]},
+  { category: 'Lower Body', fields: [
+    { key: 'hips', label: 'Hips' },
+    { key: 'thigh', label: 'Thighs' },
+    { key: 'knee', label: 'Knee' },
+    { key: 'ankle', label: 'Ankle' },
+  ]},
+  { category: 'Garment Lengths', fields: [
+    { key: 'short_length', label: 'Short Length' },
+    { key: 'midi_length', label: 'Midi Length' },
+    { key: 'full_length', label: 'Full Length' },
+    { key: 'trouser_length', label: 'Trouser Length' },
+  ]},
+];
 
 const AdminMeasurements = () => {
   const [measurements, setMeasurements] = useState<Measurements[]>([]);
@@ -82,7 +151,6 @@ const AdminMeasurements = () => {
   const fetchData = async () => {
     setLoading(true);
     
-    // Fetch all measurements
     const { data: measurementsData, error: measurementsError } = await supabase
       .from('measurements')
       .select('*')
@@ -92,7 +160,6 @@ const AdminMeasurements = () => {
       console.error('Error fetching measurements:', measurementsError);
       toast.error('Failed to load measurements');
     } else {
-      // Fetch profiles for each measurement
       const measurementsWithProfiles: Measurements[] = [];
       for (const m of measurementsData || []) {
         const { data: profile } = await supabase
@@ -105,7 +172,6 @@ const AdminMeasurements = () => {
       setMeasurements(measurementsWithProfiles);
     }
 
-    // Fetch all customers for the dropdown
     const { data: customersData, error: customersError } = await supabase
       .from('profiles')
       .select('id, full_name, email')
@@ -146,18 +212,29 @@ const AdminMeasurements = () => {
 
     const measurementData = {
       customer_id: formData.customer_id,
-      chest: parseNumber(formData.chest),
       shoulder: parseNumber(formData.shoulder),
-      arm_length: parseNumber(formData.arm_length),
-      bicep: parseNumber(formData.bicep),
-      wrist: parseNumber(formData.wrist),
-      neck: parseNumber(formData.neck),
-      waist: parseNumber(formData.waist),
-      hip: parseNumber(formData.hip),
-      inseam: parseNumber(formData.inseam),
-      outseam: parseNumber(formData.outseam),
+      bust: parseNumber(formData.bust),
+      upbust: parseNumber(formData.upbust),
+      underbust: parseNumber(formData.underbust),
+      shoulder_to_nipple: parseNumber(formData.shoulder_to_nipple),
+      shoulder_to_underbust: parseNumber(formData.shoulder_to_underbust),
+      shoulder_to_above_knee: parseNumber(formData.shoulder_to_above_knee),
+      shoulder_to_knee: parseNumber(formData.shoulder_to_knee),
+      half_length_front: parseNumber(formData.half_length_front),
+      half_length_back: parseNumber(formData.half_length_back),
+      blouse_length: parseNumber(formData.blouse_length),
+      hips: parseNumber(formData.hips),
+      short_length: parseNumber(formData.short_length),
+      midi_length: parseNumber(formData.midi_length),
+      full_length: parseNumber(formData.full_length),
       thigh: parseNumber(formData.thigh),
-      height: parseNumber(formData.height),
+      knee: parseNumber(formData.knee),
+      ankle: parseNumber(formData.ankle),
+      trouser_length: parseNumber(formData.trouser_length),
+      armhole: parseNumber(formData.armhole),
+      round_sleeves: parseNumber(formData.round_sleeves),
+      sleeve_length: parseNumber(formData.sleeve_length),
+      neck: parseNumber(formData.neck),
       notes: formData.notes.trim() || null,
     };
 
@@ -194,18 +271,29 @@ const AdminMeasurements = () => {
     setEditingId(measurement.id);
     setFormData({
       customer_id: measurement.customer_id,
-      chest: measurement.chest?.toString() || '',
       shoulder: measurement.shoulder?.toString() || '',
-      arm_length: measurement.arm_length?.toString() || '',
-      bicep: measurement.bicep?.toString() || '',
-      wrist: measurement.wrist?.toString() || '',
-      neck: measurement.neck?.toString() || '',
-      waist: measurement.waist?.toString() || '',
-      hip: measurement.hip?.toString() || '',
-      inseam: measurement.inseam?.toString() || '',
-      outseam: measurement.outseam?.toString() || '',
+      bust: measurement.bust?.toString() || '',
+      upbust: measurement.upbust?.toString() || '',
+      underbust: measurement.underbust?.toString() || '',
+      shoulder_to_nipple: measurement.shoulder_to_nipple?.toString() || '',
+      shoulder_to_underbust: measurement.shoulder_to_underbust?.toString() || '',
+      shoulder_to_above_knee: measurement.shoulder_to_above_knee?.toString() || '',
+      shoulder_to_knee: measurement.shoulder_to_knee?.toString() || '',
+      half_length_front: measurement.half_length_front?.toString() || '',
+      half_length_back: measurement.half_length_back?.toString() || '',
+      blouse_length: measurement.blouse_length?.toString() || '',
+      hips: measurement.hips?.toString() || '',
+      short_length: measurement.short_length?.toString() || '',
+      midi_length: measurement.midi_length?.toString() || '',
+      full_length: measurement.full_length?.toString() || '',
       thigh: measurement.thigh?.toString() || '',
-      height: measurement.height?.toString() || '',
+      knee: measurement.knee?.toString() || '',
+      ankle: measurement.ankle?.toString() || '',
+      trouser_length: measurement.trouser_length?.toString() || '',
+      armhole: measurement.armhole?.toString() || '',
+      round_sleeves: measurement.round_sleeves?.toString() || '',
+      sleeve_length: measurement.sleeve_length?.toString() || '',
+      neck: measurement.neck?.toString() || '',
       notes: measurement.notes || '',
     });
     setDialogOpen(true);
@@ -245,7 +333,7 @@ const AdminMeasurements = () => {
                 Add Measurements
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle className="font-display">
                   {editingId ? 'Edit Measurements' : 'Add New Measurements'}
@@ -275,149 +363,26 @@ const AdminMeasurements = () => {
                   </Select>
                 </div>
 
-                <div>
-                  <h4 className="font-display font-medium mb-3">Upper Body (cm)</h4>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    <div>
-                      <Label htmlFor="chest">Chest</Label>
-                      <Input
-                        id="chest"
-                        type="number"
-                        step="0.1"
-                        value={formData.chest}
-                        onChange={(e) => handleInputChange('chest', e.target.value)}
-                        placeholder="e.g., 96"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="shoulder">Shoulder</Label>
-                      <Input
-                        id="shoulder"
-                        type="number"
-                        step="0.1"
-                        value={formData.shoulder}
-                        onChange={(e) => handleInputChange('shoulder', e.target.value)}
-                        placeholder="e.g., 45"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="arm_length">Arm Length</Label>
-                      <Input
-                        id="arm_length"
-                        type="number"
-                        step="0.1"
-                        value={formData.arm_length}
-                        onChange={(e) => handleInputChange('arm_length', e.target.value)}
-                        placeholder="e.g., 62"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="bicep">Bicep</Label>
-                      <Input
-                        id="bicep"
-                        type="number"
-                        step="0.1"
-                        value={formData.bicep}
-                        onChange={(e) => handleInputChange('bicep', e.target.value)}
-                        placeholder="e.g., 32"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="wrist">Wrist</Label>
-                      <Input
-                        id="wrist"
-                        type="number"
-                        step="0.1"
-                        value={formData.wrist}
-                        onChange={(e) => handleInputChange('wrist', e.target.value)}
-                        placeholder="e.g., 17"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="neck">Neck</Label>
-                      <Input
-                        id="neck"
-                        type="number"
-                        step="0.1"
-                        value={formData.neck}
-                        onChange={(e) => handleInputChange('neck', e.target.value)}
-                        placeholder="e.g., 40"
-                      />
+                {measurementFields.map((category) => (
+                  <div key={category.category}>
+                    <h4 className="font-display font-medium mb-3">{category.category} (cm)</h4>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                      {category.fields.map((field) => (
+                        <div key={field.key}>
+                          <Label htmlFor={field.key}>{field.label}</Label>
+                          <Input
+                            id={field.key}
+                            type="number"
+                            step="0.1"
+                            value={formData[field.key as keyof MeasurementFormData]}
+                            onChange={(e) => handleInputChange(field.key as keyof MeasurementFormData, e.target.value)}
+                            placeholder="—"
+                          />
+                        </div>
+                      ))}
                     </div>
                   </div>
-                </div>
-
-                <div>
-                  <h4 className="font-display font-medium mb-3">Lower Body (cm)</h4>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    <div>
-                      <Label htmlFor="waist">Waist</Label>
-                      <Input
-                        id="waist"
-                        type="number"
-                        step="0.1"
-                        value={formData.waist}
-                        onChange={(e) => handleInputChange('waist', e.target.value)}
-                        placeholder="e.g., 82"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="hip">Hip</Label>
-                      <Input
-                        id="hip"
-                        type="number"
-                        step="0.1"
-                        value={formData.hip}
-                        onChange={(e) => handleInputChange('hip', e.target.value)}
-                        placeholder="e.g., 98"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="inseam">Inseam</Label>
-                      <Input
-                        id="inseam"
-                        type="number"
-                        step="0.1"
-                        value={formData.inseam}
-                        onChange={(e) => handleInputChange('inseam', e.target.value)}
-                        placeholder="e.g., 78"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="outseam">Outseam</Label>
-                      <Input
-                        id="outseam"
-                        type="number"
-                        step="0.1"
-                        value={formData.outseam}
-                        onChange={(e) => handleInputChange('outseam', e.target.value)}
-                        placeholder="e.g., 105"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="thigh">Thigh</Label>
-                      <Input
-                        id="thigh"
-                        type="number"
-                        step="0.1"
-                        value={formData.thigh}
-                        onChange={(e) => handleInputChange('thigh', e.target.value)}
-                        placeholder="e.g., 58"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="height">Height</Label>
-                      <Input
-                        id="height"
-                        type="number"
-                        step="0.1"
-                        value={formData.height}
-                        onChange={(e) => handleInputChange('height', e.target.value)}
-                        placeholder="e.g., 175"
-                      />
-                    </div>
-                  </div>
-                </div>
+                ))}
 
                 <div>
                   <Label htmlFor="notes">Notes</Label>
